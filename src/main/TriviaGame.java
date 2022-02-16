@@ -17,6 +17,7 @@ public class TriviaGame {
     boolean isGettingOutOfPenaltyBox;
 
     public TriviaGame() {
+
         for (int i = 0; i < 50; i++) {
             popQuestions.addLast("Pop Question " + i);
             scienceQuestions.addLast(("Science Question " + i));
