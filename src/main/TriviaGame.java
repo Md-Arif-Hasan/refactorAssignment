@@ -24,6 +24,8 @@ public class TriviaGame {
         this.currentPlayer = currentPlayer;
     }
 
+
+
     public boolean isPlayable() {
         return (playerList.size() >= 2);
     }
@@ -34,6 +36,8 @@ public class TriviaGame {
         announce("They are player number " + playerList.size());
         return true;
     }
+
+
 
     public void roll(int roll) {
         iterator = iterator.hasNext()? iterator :playerList.iterator();
@@ -53,6 +57,10 @@ public class TriviaGame {
             }
         }
     }
+
+
+
+
 
     private void askQuestion(QuestionType curQuesType) {
         announce(questionList.get(curQuesType.retType()).removeFirst());
