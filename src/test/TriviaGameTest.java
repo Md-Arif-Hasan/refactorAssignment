@@ -7,7 +7,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 
 public class TriviaGameTest {
-    FakeTriviaGame game ;
+    FakeTriviaGame game;
 
     @Test
     public void correctlyAnswered() {

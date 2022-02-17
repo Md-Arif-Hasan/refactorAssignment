@@ -7,13 +7,13 @@ import java.util.LinkedList;
 public class TriviaGame {
     private ArrayList<Player> playerList;
     private HashMap<QuestionType,LinkedList<Questions>> questionList;
-    Iterator<Player> it;
+    Iterator<Player> iterator;
     private Player currentPlayer;
 
     public TriviaGame(ArrayList<Player> playerList, HashMap<QuestionType, LinkedList<Questions>> questionList){
         this.playerList = playerList;
         this.questionList = questionList;
-        this.it=this.playerList.iterator();
+        this.iterator =this.playerList.iterator();
     }
 
     public Player getCurrentPlayer() {
@@ -36,8 +36,8 @@ public class TriviaGame {
     }
 
     public void roll(int roll) {
-        it=it.hasNext()?it:playerList.iterator();
-        currentPlayer=it.next();
+        iterator = iterator.hasNext()? iterator :playerList.iterator();
+        currentPlayer= iterator.next();
         announce(currentPlayer.getName() + " is the current player");
         announce("They have rolled a " + roll);
         currentPlayer.move(roll);
