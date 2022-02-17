@@ -1,190 +1,81 @@
 package main;
-
-
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class TriviaGame {
+    private ArrayList<Player> playerList;
+    private HashMap<QuestionType,LinkedList<Questions>> questionList;
+    Iterator<Player> it;
+    private Player currentPlayer;
 
-    ArrayList <Player>players=new ArrayList<>();
-    int currentPlayer = 0;
-    boolean isGettingOutOfPenaltyBox;
-    Question question;
-    List<QuestionPatternMatcher> patternMatcherList=new ArrayList<>() ;
-    public TriviaGame() {
-        question.QuestionSetting();
+    public TriviaGame(ArrayList<Player> playerList, HashMap<QuestionType, LinkedList<Questions>> questionList){
+        this.playerList = playerList;
+        this.questionList = questionList;
+        this.it=this.playerList.iterator();
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public boolean isPlayable() {
-        return (howManyPlayers() >= 2);
+        return (playerList.size() >= 2);
     }
-
-    public void  add(String playerName) {
-        Player player=new Player(playerName,0,0,false);
-        players.add(player);
-        announce(playerName + " was added");
-        announce("They are player number " + players.size());
-    }
-
-    public int howManyPlayers() {
-        return players.size();
-    }
-
-    private boolean isOdd(int roll){
-        return (roll%2!=0) ;
-    }
-
-    private boolean isEven(int roll){
-        return (roll%2==0) ;
-    }
-
-    public void roll(int roll) {
-        Player curPlayer =players.get(currentPlayer);
-        announce(curPlayer.getPlayerName() + " is the current player");
-        announce("They have rolled a " + roll);
-
-        if (curPlayer.isInPenaltyBox()) {
-
-            if (isOdd(roll)) {
-                isGettingOutOfPenaltyBox = true;
-                announce(players.get(currentPlayer) + " is getting out of the penalty box");
-                locationSetting(roll, curPlayer);
-            }
-
-            if(isEven(roll)) {
-                announce(players.get(currentPlayer) + " is not getting out of the penalty box");
-                isGettingOutOfPenaltyBox = false;
-            }
-
-        }
-        else {
-            locationSetting(roll, curPlayer);
-        }
-
-    }
-
-
-    private void locationSetting(int roll, Player curPlayer) {
-        Question question=new Question();
-        curPlayer.setPlaces(curPlayer.getPlaces()+ roll) ;
-        if (curPlayer.getPlaces()> 11) curPlayer.setPlaces(curPlayer.getPlaces()-12) ;
-
-
-        announce(players.get(currentPlayer)
-                + "'s new location is "
-                + curPlayer.getPlaces());
-        announce("The category is " + currentCategory());
-       askQuestion();
-    }
-
-    //refactor for loop
-public void random() {
-    QuestionPatternMatcher popQuestion =new PopQuestion();
-    QuestionPatternMatcher  rockQuestion =new RockQuestion();
-    QuestionPatternMatcher scienceQuestion =new ScienceQuestion();
-    QuestionPatternMatcher sportsQuestion =new SportsQuestion();
-
-
-    patternMatcherList.add(popQuestion);
-    patternMatcherList.add(rockQuestion);
-    patternMatcherList.add(scienceQuestion);
-    patternMatcherList.add(sportsQuestion);
-
-}
-
-public void askQuestion(){
-    for (QuestionPatternMatcher questionPatt: patternMatcherList) {
-        if(questionPatt.Match(currentCategory())){
-            announce(questionPatt);
-        }
-
-    }
-}
-//    public void askQuestion() {
-//        if (currentCategory() == "Pop")
-//            announce(question.popQuestions.removeFirst());
-//        if (currentCategory() == "Science")
-//            announce(question.scienceQuestions.removeFirst());
-//        if (currentCategory() == "Sports")
-//            announce(question.sportsQuestions.removeFirst());
-//        if (currentCategory() == "Rock")
-//            announce(question.rockQuestions.removeFirst());
-//    }
-
-
-
-    //Refactor if-else
-    public String currentCategory() {
-        Player curPlayer =players.get(currentPlayer);
-        if (isPop (curPlayer.getPlaces()) )return "Pop";
-        if (isScience(curPlayer.getPlaces() )) return "Science";
-        if (isSports(curPlayer.getPlaces())) return "Sports";
-        return "Rock";
-    }
-
-    boolean isPop(int number) {
-        if(number==0 || number==4 ||number==8)return true;
-        return  false;
-    }
-
-    boolean isScience(int number) {
-        if(number==1 || number==5 ||number==9)return true;
-        return  false;
-    }
-
-    boolean isSports(int number) {
-        if(number==2 || number==6 ||number==10)return true;
-        return  false;
-    }
-
-    public boolean wasCorrectlyAnswered() {
-        Player curPlayer =players.get(currentPlayer);
-        if (curPlayer.inPenaltyBox) {
-            if (isGettingOutOfPenaltyBox) {
-                return correctAnswer(curPlayer);
-            } else {
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
-                return true;
-            }
-        } else {
-          correctAnswer(curPlayer);
-        }
-        return false;
-    }
-
-    private boolean correctAnswer(Player curPlayer) {
-        announce("Answer was correct!!!!");
-        curPlayer.setPurses(curPlayer.getPurses()+1);
-        announce(curPlayer.getPlayerName()
-                + " now has "
-                + curPlayer.getPurses()
-                + " Gold Coins.");
-
-        boolean winner = didPlayerWin();
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
-
-        return winner;
-    }
-
-    public boolean wrongAnswer() {
-        Player curPlayer =players.get(currentPlayer);
-        announce("Question was incorrectly answered");
-        announce(curPlayer.getPlayerName()  + " was sent to the penalty box");
-
-        curPlayer.setInPenaltyBox(true);
-
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
+    public boolean addPlayer(String playerName) {
+        Player newPlayer= new Player(playerName);
+        playerList.add(newPlayer);
+        announce(newPlayer.getName() + " was added");
+        announce("They are player number " + playerList.size());
         return true;
     }
 
-    private boolean didPlayerWin() {
-        Player curPlayer =players.get(currentPlayer);
-        return !(curPlayer.getPurses()== 6);
+    public void roll(int roll) {
+        it=it.hasNext()?it:playerList.iterator();
+        currentPlayer=it.next();
+        announce(currentPlayer.getName() + " is the current player");
+        announce("They have rolled a " + roll);
+        currentPlayer.move(roll);
+        if(!currentPlayer.isPenaltyBox()) {
+            QuestionType currQuesType=null;
+            for(QuestionType quesTypeItr: questionList.keySet()){
+                if(quesTypeItr.matchCategory(currentPlayer.getPlace())){
+                    currQuesType=quesTypeItr;
+                    announce("The category is " + currQuesType.retType());
+                    askQuestion(currQuesType);
+                    break;
+                }
+            }
+        }
     }
 
+    private void askQuestion(QuestionType curQuesType) {
+        announce(questionList.get(curQuesType.retType()).removeFirst());
+    }
+
+    public boolean wasCorrectlyAnswered() {
+        if(!getCurrentPlayer().isPenaltyBox()){
+            announce("Answer was correct!!!!");
+            currentPlayer.setPurse(currentPlayer.getPlace()+1);
+            announce(currentPlayer.getName() + " now has " +currentPlayer.getPurse() + " Gold Coins.");
+            return didPlayerWin();
+        }
+        return false;
+    }
+    public boolean wrongAnswer() {
+        announce("Question was incorrectly answered");
+        announce(currentPlayer.getName()+ " was sent to the penalty box");
+        currentPlayer.setPenaltyBox(true);
+        return true;
+    }
+    private boolean didPlayerWin() {
+        return !(currentPlayer.getPurse()==6);
+    }
     protected void announce(Object message) {
         System.out.println(message);
     }

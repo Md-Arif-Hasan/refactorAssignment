@@ -1,22 +1,18 @@
 package test;
-
-
-import main.TriviaGame;
+import main.*;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class TriviaGameTest {
-    FakeTriviaGame game = new FakeTriviaGame();
+    FakeTriviaGame game ;
 
     @Test
     public void correctlyAnswered() {
-        game.add("Chet");
-        game.add("Pat");
+        game.addPlayer("Chet");
+        game.addPlayer("Pat");
         game.roll(2);
         game.wasCorrectlyAnswered();
 
@@ -36,8 +32,8 @@ public class TriviaGameTest {
 
     @Test
     public void wronglyAnswered() {
-        game.add("Chet");
-        game.add("Pat");
+        game.addPlayer("Chet");
+        game.addPlayer("Pat");
         game.roll(1);
         game.wrongAnswer();
 
@@ -57,6 +53,10 @@ public class TriviaGameTest {
 
     class FakeTriviaGame extends TriviaGame {
         List<String> messages = new ArrayList<>();
+
+        public FakeTriviaGame(ArrayList<Player> playerList, HashMap<QuestionType, LinkedList<Questions>> questionList) {
+            super(playerList, questionList);
+        }
 
         @Override
         protected void announce(Object message) {
