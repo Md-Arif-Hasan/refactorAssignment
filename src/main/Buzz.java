@@ -1,14 +1,14 @@
 package main;
-public class NullResponse implements PatternMatcher{
+
+public class Buzz implements PatternMatcher{
 
     @Override
     public boolean checkMatching(int number) {
-        return false;
+        return number % 5 == 0;
     }
 
     @Override
     public String createResponse() {
-        return "";
+        return "Buzz";
     }
-
 }

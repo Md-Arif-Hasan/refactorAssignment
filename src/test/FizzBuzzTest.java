@@ -13,8 +13,8 @@ public class FizzBuzzTest {
     FizzBuzz fizzBuzz;
 
     public void  initializer (){
-        PatternMatcher patternMatcher =new FizzPatternMatcher() ;
-        PatternMatcher buzzPatternMatcher =new BuzzPatternMatcher() ;
+        PatternMatcher patternMatcher =new Fizz() ;
+        PatternMatcher buzzPatternMatcher =new Buzz() ;
         PatternMatcher nullObject=new NullResponse();
          List <PatternMatcher> list=new ArrayList<>();
          list.add(patternMatcher);
